@@ -1,0 +1,1462 @@
+	var docoHttp = location.protocol;
+	var bookMarklets = new Array(
+//		{"BookmarkletName":"Add 50 Mobsters","URL":"https://mrsimy-1015.kxcdn.com/Scripts/MobWars/addmeee.js"}
+		{"BookmarkletName":"Bacon OLD","URL":"https://mrsimy-1015.kxcdn.com/Scripts/MobWars/ahhhBacon.js"},
+		{"BookmarkletName":"Inventory Analyser","URL":"https://mrsimy-1015.kxcdn.com/Scripts/MobWars/guessx_ia.js"},
+		{"BookmarkletName":"Magic Mob Maxer","URL":"https://mrsimy-1015.kxcdn.com/Scripts/MobWars/guessx_mmm.js"}		
+	)
+
+	var limitedNum, limitedName;
+	var isFirstLoada = true;
+	var isFirstLoadb = true;
+	var isFirstLoadc = true;
+	var isFirstLoadd = true;
+	var gx_sb = {
+		version: '1.05',
+		isStarted: false,
+		doBanking: false,
+		doHeists: false,
+		intOrder:0,
+		intStart:0,
+		lastBank:new Date(),
+		lastProp:new Date(),
+		lastRacket:new Date(),
+		lastHeist:new Date(),
+		propArray: [],
+		heistArray: [],
+		rackCity:60,
+		options:{
+			autoBank:false,
+			autoProp:false,
+			autoMoney:true,
+			autoRacket:true,
+			autoHeist:true,
+			autoRun:false,
+			collectFull:false,
+			collectNY:true,
+			collectChi:true,
+			collectLon:true,
+			collectVeg:true,
+			collectMos:true,  
+			collectDub:true,
+			collectSha:true,
+			collectTok:true,
+			autoHeists:true,
+			statusBar:true,
+			firstRun:true,
+			PostToGroupWithID: ''
+		}
+	};
+	
+	document.title = 'Mob Wars - Guess.\u3024';
+	
+	jQuery('#container').css('width', '763px');	
+	jQuery('#fluid').hide();
+	
+	jQuery('#guessx_sideBarDiv').css({
+		"width":"137px", "position": "fixed", "height":"130px", "left": jQuery('#container').offset().left-138, "top": "124px", "z-index": "1", "border":"1px solid #444", "border-right":"none", "border-top-left-radius":"10px", "border-bottom-left-radius": "39px", "background": "#333333", "background-image":"url(https://s3.amazonaws.com/metamoki-mobwars-content/newFbUI/misc/bg_fluid_container.jpg)"
+	}).html(
+		'<style type="text/css">'+
+			'div.pop_box {'+
+			'	background: #1a1a1a none repeat scroll 0 0;'+
+			'	border: 2px solid #646100;'+
+			'	border-radius: 8px;'+
+			'	color: #fff;'+
+			'	display: none;'+
+			'	position: absolute;'+
+			'	text-align: left;'+
+			'	top: 100px;'+
+			'	width: 650px;'+
+			'	z-index: 50;'+
+			'}'+
+			'a.pop_close, a.pop_close:link {'+
+			'	background: transparent url("https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/black_close_button_14x14_01.gif") no-repeat scroll 0 0;'+
+			'	display: block;'+
+			'	height: 14px;'+
+			'	position: absolute;'+
+			'	right: 7px;'+
+			'	text-decoration: none;'+
+			'	top: 7px;'+
+			'	width: 14px;'+
+			'	z-index: 24;'+
+			'}'+
+			'a.pop_close:hover {'+
+			'	border: medium none;'+
+			'	text-decoration: none;'+
+			'}'+
+			'.gx_button {'+
+			'	color: #fff;'+
+			'	display: inline-block;'+
+			'	font-size: 14px;'+
+			'	font-weight: bold;'+
+			'	height: 27px;'+
+			'	line-height: 15px;'+
+			'	padding: 0 0 0 3px;'+
+			'	text-align: center;'+
+			'	text-decoration: none;'+
+			'	vertical-align: middle;'+
+			'}'+
+			'span.gx_button {'+
+			'	opacity: 0.2;'+
+			'}'+
+			'span.gx_button_no_fade {'+
+			'	opacity: 1;'+
+			'}'+
+			'span.narrow_gx_button {'+
+			'	padding: 5px 6px !important;'+
+			'}'+
+			'span.narrow_gx_button_medium {'+
+			'	padding: 6px !important;'+
+			'}'+
+			'.gx_button.shorter {'+
+			'	height: 20px;'+
+			'}'+
+			'.gx_button.medium {'+
+			'	height: 32px;'+
+			'}'+
+			'.gx_button.tall {'+
+			'	height: 54px;'+
+			'}'+
+			'.gx_button:hover {'+
+			'	cursor: pointer;'+
+			'	text-decoration: none !important;'+
+			'}'+
+			'button.gx_button {'+
+			'	border: medium none;'+
+			'	overflow: visible;'+
+			'}'+
+			'.gx_button > span {'+
+			'	display: block;'+
+			'	padding: 1px 0;'+
+			'}'+
+			'.gx_button, .gx_button > span {'+
+			'	background-color: transparent;'+
+			'	background-image: url("https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/v3/buttons_600x2195_07.png");'+
+			'}'+
+			'a.gx_button, button.gx_button, a.gx_button > span, button.gx_button > span, span.gx_button > span {'+
+			'	background-position: -597px 0;'+
+			'	background-repeat: no-repeat;'+
+			'}'+
+			'.gx_button:hover, .gx_button:hover > span, .gx_button_hover_state, .gx_button_hover_state > span {'+
+			'	background-image: url("https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/v3/buttons_hover_600x2195_07.png");'+
+			'}'+
+			'a.gx_button > span, button.gx_button > span, span.gx_button > span {'+
+			'	background-position: 100% -50px;'+
+			'	white-space: nowrap;'+
+			'}'+
+			'.gx_button.skip {'+
+			'	color: #999 !important;'+
+			'}'+
+			'.gx_button.gold {'+
+			'	color: #4b3700;'+
+			'}'+
+			'.gx_button.green {'+
+			'	color: #1b3100;'+
+			'}'+
+			'.gx_button.orange {'+
+			'	color: #412800;'+
+			'}'+
+			'.gx_button.red {'+
+			'	color: #fff;'+
+			'}'+
+			'.gx_button.white {'+
+			'	color: #1a1a1a;'+
+			'}'+
+			'.gx_button.purple {'+
+			'	color: #2f113a;'+
+			'}'+
+			'.gx_button.short.black_white_border {'+
+			'	background-position: -597px -100px;'+
+			'}'+
+			'.gx_button.short.black_white_border > span {'+
+			'	background-position: right -150px;'+
+			'}'+
+			'.gx_button.shorter.black {'+
+			'	background-position: -597px -1500px;'+
+			'}'+
+			'.gx_button.shorter.black > span {'+
+			'	background-position: right -1550px;'+
+			'}'+
+			'.gx_button.short.green {'+
+			'	background-position: -597px -200px;'+
+			'}'+
+			'.gx_button.short.green > span {'+
+			'	background-position: right -250px;'+
+			'}'+
+			'.gx_button.short.orange {'+
+			'	background-position: -597px -300px;'+
+			'}'+
+			'.gx_button.short.orange > span {'+
+			'	background-position: right -350px;'+
+			'}'+
+			'.gx_button.short.red {'+
+			'	background-position: -597px -400px;'+
+			'}'+
+			'.gx_button.short.red > span {'+
+			'	background-position: right -450px;'+
+			'}'+
+			'.gx_button.short.white {'+
+			'	background-position: -597px -500px;'+
+			'}'+
+			'.gx_button.short.white > span {'+
+			'	background-position: right -550px;'+
+			'}'+
+			'.gx_button.short.gold {'+
+			'	background-position: -597px -2095px;'+
+			'}'+
+			'.gx_button.short.gold > span {'+
+			'	background-position: right -2145px;'+
+			'}'+
+			'.gx_button.medium.black {'+
+			'	background-position: -597px -650px;'+
+			'}'+
+			'.gx_button.medium.black > span {'+
+			'	background-position: right -700px;'+
+			'}'+
+			'.gx_button.medium.green {'+
+			'	background-position: -597px -850px;'+
+			'}'+
+			'.gx_button.medium.green > span {'+
+			'	background-position: right -900px;'+
+			'}'+
+			'.gx_button.medium.orange {'+
+			'	background-position: -597px -950px;'+
+			'}'+
+			'.gx_button.medium.orange > span {'+
+			'	background-position: right -1000px;'+
+			'}'+
+			'.gx_button.medium.red {'+
+			'	background-position: -597px -1050px;'+
+			'}'+
+			'.gx_button.medium.red > span {'+
+			'	background-position: right -1100px;'+
+			'}'+
+			'.gx_button.medium.white {'+
+			'	background-position: -597px -1150px;'+
+			'}'+
+			'.gx_button.medium.white > span {'+
+			'	background-position: right -1200px;'+
+			'}'+
+			'.gx_button.tall.black {'+
+			'	background-position: -597px -1300px;'+
+			'}'+
+			'.gx_button.tall.black > span {'+
+			'	background-position: right -1400px;'+
+			'}'+
+			'.gx_button.medium.gold {'+
+			'	background-position: -597px -1800px;'+
+			'}'+
+			'.gx_button.medium.gold > span {'+
+			'	background-position: right -1850px;'+
+			'}'+
+			'.gx_button.medium.purple {'+
+			'	background-position: -597px -1900px;'+
+			'}'+
+			'.gx_button.medium.purple > span {'+
+			'	background-position: right -1950px;'+
+			'}'+
+			'.gx_button.short.purple {'+
+			'	background-position: -597px -2000px;'+
+			'}'+
+			'.gx_button.short.purple > span {'+
+			'	background-position: right -2050px;'+
+			'}'+
+			'.gx_button.disabled > span > span {'+
+			'	opacity: 0.4;'+
+			'}'+
+			'.gx_button.disabled:hover {'+
+			'	cursor: default;'+
+			'	text-decoration: none !important;'+
+			'}'+
+			'.gx_button.disabled:hover, .gx_button.disabled:hover > span {'+
+			'	background-image: url("https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/v3/buttons_600x2195_07.png");'+
+			'}'+
+			'.gx_button > span > span {'+
+			'	background-position: 1000px 0;'+
+			'	background-repeat: no-repeat;'+
+			'	display: block;'+
+			'	margin: 0;'+
+			'	padding: 5px 12px 5px 9px;'+
+			'}'+
+			'.gx_button > span > span {'+
+			'	background-image: url("https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/v3/button_icons_634x325_06.png");'+
+			'}'+
+			'.gx_button.shorter > span > span {'+
+			'	padding-bottom: 2px;'+
+			'	padding-top: 1px;'+
+			'}'+
+			'.gx_button.medium > span > span {'+
+			'	padding-bottom: 8px;'+
+			'	padding-top: 7px;'+
+			'}'+
+			'.more_in {'+
+			'	color: #898989;'+
+			'	margin: 0;'+
+			'	padding: 0;'+
+			'}'+
+		'</style>');
+		
+		jQuery('#guessx_sideBarDiv').append('<center><a href="https://www.facebook.com/GuessX-Scripts-131414080285469" target="_blank" class="gx_button short white" title="Sidey McSideyface - Click to visit Fan Page" alt="Sidey McSideyface - Click to visit Fan Page" style="margin-top:3px;"><span><span>Guess.&#12324;</span></span></a></center>'+
+			'<span style="line-height:27px">&nbsp;</span>'+
+			'<center><a href="#" id="gx_scriptsButton" class="gx_button short black" title="Click to show/hide Bookmarklets" alt="Click to show/hide Bookmarklets" style="margin-top:3px;">'+
+				'<span>'+
+					'<span>Bookmarklets <img src="https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/dropdown_travel_arrow.gif" style="transform:rotate(-90deg);"></span>'+
+				'</span>'+
+			'</a>'+
+			'<div id="gx_scriptsMenu" style="display:none; z-index:10004; background-color: #333; position: absolute; left: 130px;top:52px;"></div>'+
+			'</center>'+
+			'<center><a style="display:none" class="gx_button short orange" id="gx_sbAutorunButton"><span><span> Autostarting...</span></span></a><a href="#" id="gx_sbStopGo" class="gx_button short green" title="Click to start" alt="Click to start" style="margin-top:3px;">'+
+					'<span>'+
+						'<span>'+
+							'Start'+
+						'</span>'+
+					'</span>'+
+				'</a> '+
+				'<a href="#" id="gx_sbConfig" class="gx_button short black" title="Click to open Config" alt="Click to open Config" style="margin-top:3px;">'+
+					'<span>'+
+						'<span>'+
+							'<img src="https://zynga1-a.akamaihd.net/mwfb/mwfb/graphics/v3/icon_hammer_wrench.png" />'+
+						'</span>'+
+					'</span>'+
+				'</a></center>'+
+				
+		'<div id="guessx_sbConfigDiv" style="z-index:1001; display:none; position: absolute; top: -40px; left: 155px;">'+
+			'<div style="display: block; left: 40px;" class="pop_box">'+
+				'<h3 style="text-align:center;">Mob Wars Sidebar Config</h3>'+
+				'<a class="pop_close" id="guessx_sbConfigClose" href="#"></a>'+
+				'<div style="padding: 15px 15px 0px 15px;">'+
+					'<table>'+
+						'<tr>'+
+						'		<td valign="top">'+
+						'		<h4><u>Banking/Property Options</u></h4>'+
+						'		<nobr><label><input type="radio" name="gx_sbMoney" id="gx_sbAutoBank" /> Autobank every 15 minutes</label></nobr><br />'+
+						'		<nobr><label><input type="radio" name="gx_sbMoney" id="gx_sbAutoProperty" /> or Auto buy Property every 15 minutes</label></nobr><br />'+
+						'		<nobr><label><input type="radio" name="gx_sbMoney" id="gx_sbAutoMoney" /> or No Banking & No Buying Property</label></nobr><br />'+				
+						'		<h4><u>Rackets Options</u></h4>'+
+						'		<nobr><label><input type="checkbox" id="gx_sbAutoRacket" /> Check/Collect Rackets</label></nobr><br />'+
+						'		<span id="gx_sbRacketList" style="display:none">'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbFULLRacket" /> Collect Only if Rackets are full</label></nobr><br />'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbNYRacket" /> Collect New York Rackets</label></nobr><br />'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbCHIRacket" /> Collect Chicago Rackets</label></nobr><br />'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbLONRacket" /> Collect London Rackets</label></nobr><br />'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbVEGASRacket" /> Collect Vegas Rackets</label></nobr><br />'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbMOSRacket" /> Collect Moscow Rackets</label></nobr><br />'+
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbDUBRacket" /> Collect Dubai Rackets</label></nobr><br />'+	
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbSHARacket" /> Collect Shanghai Rackets</label></nobr><br />'+					
+						'		<nobr> &nbsp; <label><input type="checkbox" id="gx_sbTOKRacket" /> Collect Tokyo Rackets</label></nobr><br /></span>'+				
+						'		</td>'+
+						'		<td valign="top">'+
+						'			<h4><u>Posting Options</u></h4>'+
+						'			<nobr><label>City Heists Posting Options:</label></nobr><br />'+
+						'			<nobr> &nbsp; <label>In Group ID:&nbsp;<input style="height:10px;font-size:10px" id="gx_sbSelect_group"></label></nobr><br />'+
+						'			<nobr> &nbsp; <label><span class="more_in">*You must manually enter in a group ID</span></label></nobr><br />'+	
+						'			<h4><u>Autorun Options</u></h4>'+
+						'			<nobr><label><input type="checkbox" id="gx_sbAutorun"/> Auto Start</label></nobr><br />'+ //<span class="more_in">Autorun (Disabled)</span>
+						'			<span id="gx_sbAutoOpts" style="display:none">'+
+						'			<nobr><label><input type="checkbox" id="gx_sbFirstRun"/> Check everything <span class="more_in">(no delay)</span></label></nobr><br /></span>'+
+						'			<h4><u>City Heists</u></h4>'+
+						'			<nobr><label><input type="checkbox" id="gx_sbHeists" /> Start/Collect City Heists <span class="more_in">(3 hour delay)</span></label></nobr><br />'+
+						'			<h4><u>Misc</u></h4>'+
+						'			<nobr><label><input type="checkbox" id="gx_sbStatusBar0"/> Show Status Bar</label></nobr><br />'+
+						'			<nobr><label>GuessX Mob Wars Sidebar v'+gx_sb.version+'</label></nobr><br />'+
+
+						'		</td>'+
+						'</tr>'+	
+					'</table>'+
+					'<br />'+
+				'</div>'+
+			'</div>'+
+		'</div>');
+	
+	var gx_sbLogDiv = '<div id="gx_sbStatusBar" style="display:none">'+
+			'	<table style="border: 1px solid #444; border-top:none; border-left: none; border-right: none;  width:100%;">'+
+			'		<tr>'+
+			'			<td width="39px" valign="top"><a href="#" id="log_show">Status</a></td>'+
+			'			<td width="1px" valign="top">:</td>' +
+			'			<td id="gx_sbStatus" valign="top" colspan="2">Mob Wars Sidebar Loaded..</td>'+
+			'		</tr>'+
+			'	</table>'+
+			'</div>';
+	
+	jQuery('#ajax_content').before(gx_sbLogDiv);
+	
+	function limitednum(){
+		return /(\d+)/.exec(jQuery('div[id^="recruit_11"]').attr('id'))[1];
+	}
+	try{
+		if(jQuery('#limited_heist_'+limitednum()).length > 0){
+			jQuery('#limited_heist_'+limitednum()).css('margin-top','-25px');
+		}		
+	}catch(notHome){}
+
+	jQuery('#gx_sbStopGo').click(function(){
+		if(gx_sb.isStarted){
+			gx_sb.isStarted = false;
+			dolog('Mob Wars Sidebar Stopped..')
+			jQuery('#gx_sbStopGo').children().children().html('Start');
+			jQuery('#gx_sbStopGo').removeClass('red').addClass('green')
+		}else{
+			clearTimeout(gx_sb.intStart);
+			jQuery('#gx_sbAutorunButton').hide();
+			jQuery('#guessx_sideBarDiv').css('height','130px')
+			jQuery('#gx_sbStopGo').show();
+			gx_sb.isStarted = true;
+			dolog('Mob Wars Sidebar Running..')
+			jQuery('#gx_sbStopGo').children().children().html('Stop');
+			jQuery('#gx_sbStopGo').removeClass('green').addClass('red')
+
+		}
+		doOrder();
+		return false;
+	});
+				
+	jQuery('#gx_sbAutorunButton').click(function(){
+		clearTimeout(gx_sb.intStart);
+		jQuery('#guessx_sideBarDiv').css('height','130px');
+		jQuery('#gx_sbAutorunButton').hide();
+		jQuery('#gx_sbStopGo').show();
+		return false;
+	})
+	
+	jQuery('#gx_sbConfig').click(function(){
+		if (jQuery('#guessx_sbConfigDiv').css('display') == 'none') {
+			jQuery('#guessx_sbConfigDiv').show();
+			jQuery('#gx_sbConfig').removeClass('black').addClass('green');
+		}else{
+			jQuery('#guessx_sbConfigDiv').hide();
+			jQuery('#gx_sbConfig').removeClass('green').addClass('black');
+		}
+		return false;
+	});
+
+	jQuery('#guessx_sbConfigClose').click(function(){
+		jQuery('#gx_sbConfig').trigger('click');
+		return false;
+	});
+	
+	jQuery("#gx_sbAutoBank").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.autoBank = true;
+			gx_sb.options.autoProp = false;
+			gx_sb.options.autoMoney = false;
+		}else{
+			gx_sb.options.autoBank = false;
+			gx_sb.options.autoProp = true;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbAutoProperty").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.autoProp = true;
+			gx_sb.options.autoBank = false;
+			gx_sb.options.autoMoney = false;
+		}else{
+			gx_sb.options.autoProp = false;
+			gx_sb.options.autoBank = true;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbAutoMoney").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.autoProp = false;
+			gx_sb.options.autoBank = false;
+			gx_sb.options.autoMoney = true;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbAutoRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.autoRacket = true;
+			jQuery('#gx_sbRacketList').show();
+		}else{
+			gx_sb.options.autoRacket = false;
+			jQuery('#gx_sbRacketList').hide();
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbHeists").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.autoHeists = true;
+		}else{
+			gx_sb.options.autoHeists = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbFULLRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectFull = true;
+		}else{
+			gx_sb.options.collectFull = false;
+		}
+		writeSettings();
+	})		
+	jQuery("#gx_sbNYRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectNY = true;
+		}else{
+			gx_sb.options.collectNY = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbCHIRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectChi = true;
+		}else{
+			gx_sb.options.collectChi = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbLONRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectLon = true;
+		}else{
+			gx_sb.options.collectLon = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbVEGASRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectVeg = true;
+		}else{
+			gx_sb.options.collectVeg = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbMOSRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectMos = true;
+		}else{
+			gx_sb.options.collectMos = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbDUBRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectDub = true;
+		}else{
+			gx_sb.options.collectDub = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbSHARacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectSha = true;
+		}else{
+			gx_sb.options.collectSha = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbTOKRacket").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.collectTok = true;
+		}else{
+			gx_sb.options.collectTok = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbAutorun").click(function(){
+		if(jQuery(this).is(':checked')){
+			jQuery('#gx_sbAutoOpts').show();
+			gx_sb.options.autoRun = true;
+		}else{
+			jQuery('#gx_sbAutoOpts').hide();
+			gx_sb.options.autoRun = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbFirstRun").click(function(){
+		if(jQuery(this).is(':checked')){
+			gx_sb.options.firstRun = true;
+		}else{
+			gx_sb.options.firstRun = false;
+		}
+		writeSettings();
+	})
+	jQuery("#gx_sbStatusBar0").click(function(){
+		if(jQuery(this).is(':checked')){
+			jQuery('#gx_sbStatusBar').show();
+			gx_sb.options.statusBar = true;
+		}else{
+			jQuery('#gx_sbStatusBar').hide();
+			gx_sb.options.statusBar = false;
+		}
+		writeSettings();
+	})
+
+	jQuery('#gx_sbSelect_group').bind('keyup click change',function() {
+		gx_sb.options.PostToGroupWithID = this.value;
+		writeSettings();
+	});
+
+//	May add a status bar so will move it with page by the following	
+/*	jQuery(document).bind('scroll',function(){
+		var scroll = jQuery(document).scrollTop();
+		var display = jQuery('#gx_sbConfig').css('display');
+		var display2 = jQuery('#gx_scriptsMenu').css('display');
+		if (scroll > 10 && (display == 'none') && (display2 == 'none')) {
+			jQuery('#guessx_sideBarDiv').css({'position':'fixed'});
+		}
+		else {
+			jQuery('#guessx_sideBarDiv').css({'position':''});
+		}
+	});	*/
+	readSettings();	
+	
+	if(gx_sb.options.autoBank){
+		jQuery('#gx_sbAutoBank').prop('checked', true);
+	}else{
+		jQuery('#gx_sbAutoBank').prop('checked', false);
+	}
+	if(gx_sb.options.autoProp){
+		jQuery('#gx_sbAutoProperty').prop('checked', true);
+	}else{
+		jQuery('#gx_sbAutoProperty').prop('checked', false);
+	}
+	if(gx_sb.options.autoMoney){
+		jQuery('#gx_sbAutoMoney').prop('checked', true);
+	}else{
+		jQuery('#gx_sbAutoMoney').prop('checked', false);
+	}
+	if(gx_sb.options.autoRacket){
+		jQuery('#gx_sbAutoRacket').prop('checked', true);
+		jQuery('#gx_sbRacketList').show();
+	}else{
+		jQuery('#gx_sbAutoRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectFull){
+		jQuery('#gx_sbFULLRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbFULLRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectNY){
+		jQuery('#gx_sbNYRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbNYRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectChi){
+		jQuery('#gx_sbCHIRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbCHIRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectLon){
+		jQuery('#gx_sbLONRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbLONRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectVeg){
+		jQuery('#gx_sbVEGASRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbVEGASRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectMos){
+		jQuery('#gx_sbMOSRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbMOSRacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectDub){
+		jQuery('#gx_sbDUBRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbDUBRacket').prop('checked', false);
+	}		
+	if(gx_sb.options.collectSha){
+		jQuery('#gx_sbSHARacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbSHARacket').prop('checked', false);
+	}
+	if(gx_sb.options.collectTok){
+		jQuery('#gx_sbTOKRacket').prop('checked', true);
+	}else{
+		jQuery('#gx_sbTOKRacket').prop('checked', false);
+	}		
+	if(gx_sb.options.autoRun){
+		jQuery('#gx_sbAutorun').prop('checked', true);
+		jQuery('#gx_sbAutorunButton').show();
+		jQuery('#gx_sbStopGo').hide();
+		jQuery('#gx_sbAutoOpts').show();
+		jQuery('#guessx_sideBarDiv').css('height','155px')
+		dolog('Mob Wars Sidebar Autostarting..')
+		gx_sb.intStart = setTimeout(function(){
+			jQuery('#gx_sbStopGo').click();
+		}, 5000);
+	}else{
+		jQuery('#gx_sbAutorun').prop('checked', false);
+	}		
+	if(gx_sb.options.firstRun){
+		jQuery('#gx_sbFirstRun').prop('checked', true);
+	}else{
+		jQuery('#gx_sbFirstRun').prop('checked', false);
+	}
+	if(gx_sb.options.autoHeists){
+		jQuery('#gx_sbHeists').prop('checked', true);
+	}else{
+		jQuery('#gx_sbHeists').prop('checked', false);
+	}
+	if(gx_sb.options.statusBar){
+		jQuery('#gx_sbStatusBar0').prop('checked', true);
+		jQuery('#gx_sbStatusBar').show();
+	}else{
+		jQuery('#gx_sbStatusBar0').prop('checked', false);
+	}
+	jQuery('#gx_sbSelect_group').val(gx_sb.options.PostToGroupWithID);
+	if(jQuery('#hud_city .subDropMenu').children().length >= 2){
+		gx_sb.rackCity = 10;
+	}	
+	
+	var addEvent = function(object, type, callback) {
+		if (object == null || typeof(object) == 'undefined') return;
+		if (object.addEventListener) {
+			object.addEventListener(type, callback, false);
+		} else if (object.attachEvent) {
+			object.attachEvent("on" + type, callback);
+		} else {
+			object["on"+type] = callback;
+		}
+	};
+	addEvent(window, "resize", function(event) {
+		jQuery('#guessx_sideBarDiv').css('left',jQuery('#container').offset().left-138)
+	});	
+	
+	//Lets create a fringe event: screenrant.com/wp-content/uploads/Fringe-Observers-Teaser-Trailer.jpg
+	//Know your memes!
+	var pageIs = '';
+	var observerTarget = document.querySelector('#ajax_content');
+	
+	// create an observer instance
+	var observer = new MutationObserver(function(mutations) {
+	    mutations.forEach(function(mutation){
+			if(mutation.addedNodes.length > 0){
+				if(mutation.type === 'childList'){
+					var list_values = [].slice.call(observerTarget.children).map(function(node){return node.innerHTML;})
+					for(var i=0; i<list_values.length; i++){
+						if(/Account Balance/.test(list_values[i])){
+							pageIs = 'bank';
+							break;
+						}else if(/News Updates/.test(list_values[i])){
+							pageIs = 'homepage';
+							break;
+						}else if(/Heist Requirements/.test(list_values[i])){
+							pageIs = 'heists';
+							break;
+						}else if(/My Mob's Boss Battles - BETA/.test(list_values[i])){
+							pageIs = 'bosses';
+							break;
+						}else if(/Mob Code:/.test(list_values[i])){
+							pageIs = 'profile';
+							break;
+						}else if(/Empty Battle Slot/.test(list_values[i])){
+							pageIs = 'bossfight';
+							break;
+						}else{
+							pageIs = 'none';
+							break;
+						}
+					}
+					pageChange(pageIs)
+				}
+			}
+		});    
+	});	
+	
+	// configuration of the observer:
+	var config = { attributes: true, childList: true, characterData: true };
+	 
+	// pass in the target node, as well as the observer options
+	observer.observe(observerTarget, config);	
+
+	function pageChange(change){
+		if(change != 'none'){
+			_console('The Observers report page: '+change);
+		}
+		if(change == 'bank'){
+			if(gx_sb.doBanking){
+				chkBank();
+			}
+		}else if(change == 'heists'){
+			if(gx_sb.doHeists){
+				chkHeists();
+			}
+			if(!jQuery('#recruit_335_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_335_wrapper').children().val())){
+					jQuery('#time_job_335').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(335); return false;" ><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}
+			if(!jQuery('#recruit_337_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_337_wrapper').children().val())){
+					jQuery('#time_job_337').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(337); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}
+			if(!jQuery('#recruit_338_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_338_wrapper').children().val())){
+					jQuery('#time_job_338').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(338); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}
+			if(!jQuery('#recruit_339_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_339_wrapper').children().val())){
+					jQuery('#time_job_339').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(339); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}	
+			if(!jQuery('#recruit_340_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_340_wrapper').children().val())){
+					jQuery('#time_job_340').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(340); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}	
+			if(!jQuery('#recruit_341_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_341_wrapper').children().val())){
+					jQuery('#time_job_341').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(341); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}			
+			if(!jQuery('#recruit_342_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_342_wrapper').children().val())){
+					jQuery('#time_job_342').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(342); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}			
+			if(!jQuery('#recruit_343_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_343_wrapper').children().val())){
+					jQuery('#time_job_343').parent().first().after('<td><a id="modded" class="gx_button short orange" onclick="heistPoster(343); return false;"><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>');
+				}
+			}	
+		}else if(change == 'homepage'){
+			if(jQuery('#modded').length){
+				return;
+			}
+			jQuery('#content > #newsfeed').css("height", "300");
+			jQuery('#content > #newsfeed > .news_wrapper').css("height", "300");
+			jQuery('#content > #newsfeed > .news_wrapper').css("overflow", "auto");
+			if(jQuery('#limited_heist_'+limitednum()).length > 0){
+				jQuery('#limited_heist_'+limitednum()).css('margin-top','-25px');
+			}
+			limitedNum = /(\d+)/.exec(jQuery('div[id^="recruit_11"]').attr('id'))[1];
+			limitedName = jQuery('#limited_heist_'+limitedNum).find('.announceTitle').text();
+			if(!jQuery('#recruit_'+limitedNum+'_wrapper').hasClass('hideDisplayBox')){
+				var button = '<td><a id="modded" class="gx_button short orange" onclick="heistAPoster(); return false;" ><span><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAACXZwQWcAAAAQAAAAEABcxq3DAAABUUlEQVQ4y52TMS8EURSFv4nR2LEYWsUWej+ATtBpSDQSUSgldEKHQoOWQpQqiXI1IvsHlBKdgkSxiQ22eO+ep5jM2mWHZG81Jznn5Jz77kQhBOaWdwI9TPXyIIpmlrbD5PRsL3ruazfEAObEW/29kGhmND8/WjgZLDOUJshELBPOhDcVGgwnfWyuzpMOlwDYPaniTJhEbBLmDTMrNFhbnGqJ80TmDUnEUp6g2CAXH1/c8fzaAOhM4Jzw/neFz49GB354fAJgoFTGOSEFYilgpq4VTg9WuuKNvSvMlFVwzuOc4X1xhZ/jveGcYabsGb1Z1x2s714CcLa/3IFzzY8d/J+gneOcvu+gKMEvgzZOK8FoWmKiMkKj3v+vQWV8rPVdThOaL4PZDmQB/XGJ+bRzZIGgQByUiZOhUqHw8PwWoIMjy+4gCiEwvbDV0+9cuz6KvgDVmeooGa+dswAAACV0RVh0Y3JlYXRlLWRhdGUAMjAxMC0wNC0xM1QxOTo0NjoyMCswMDowMLs82X8AAAAVdEVYdENyZWF0aW9uIFRpbWUAMjcvMy8wOeispIwAAAAldEVYdG1vZGlmeS1kYXRlADIwMTAtMDQtMTNUMTk6NDY6MjArMDA6MDDkja9LAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1MzmNZGAwAAAal6VFh0WE1MOmNvbS5hZG9iZS54bXAAAHja1VLLitswFN3nKy7qtrYezozHwvZQEkIppAyTQEt3siV7TKIHsgZr8vVd5NFMKF0UuuhZXs7j3sMtH6MT7U4FaFQ/mAoBAIJBVujb3Zqs3UK9DJ8PXm0OX7ftYdcWEj3WszLyqJ1WQUDUezPyWCEhbaO4GblWQWAEkUftwq5Cn6RtFHxfP8HCegXzlCYtyeYwv09Zzor8/iNsRIAvwgDLgRGSA2OcUj6ncAKqZwBQetnx5+XqlOllV6GXEBzHeJqmdMpS63tMi6LAhGHGEi+7ZHwzQcTEjB+OJmefpRpbP7gwWANedlw09jVUCM3gCqfjhLsEmTEV0jYqba3GUThMU4IvzgBQRuH4wisRrN9au6+P568GrybrdyMsNlmJb0m/06ulCKpmhBQJyRKWb+kdZw88oz+u9EfSjXxt5dC9XcmLhDxsWcZpxslZfkU694JvivnbwmR76cu9+n1qfY9li9VeaWXCiGlK33cmW95Zr0WoBy16hZ3pS/xr+Mf9jtPn5aqelfjyl/W7tf4V/vuQn8/A+zhjKi18AAAAAElFTkSuQmCC"></span></span></a></td>';
+				if(/Recruit Now/.test(jQuery('#recruit_'+limitedNum+'_wrapper').children().val())){
+					jQuery('#time_job_'+limitedNum).parent().first().after(button);
+				}
+			}
+		}else if(change == 'bosses'){
+			if(jQuery('#modded').length){
+				return;
+			}
+			jQuery('form input[value=begin_boss]').parent().each(function(){
+				var bossID=jQuery(this).children().eq(0).val();
+				jQuery(this).attr('onclick', 'beginBoss('+bossID+'); return false;');
+				//jQuery(this).attr('onclick', 'MobWars.HUD.navigateTo("/bossbattles/do.php?boss_id='+jQuery(this).children().eq(0).val()+'&action=begin_boss","hud_fight");return false;')
+				jQuery(this).attr('id', 'modded');
+				jQuery(this).removeAttr('action')
+			})
+			jQuery('form input[value=engage_boss]').parent().each(function(){
+				jQuery(this).attr('onclick', 'MobWars.HUD.navigateTo("/bossbattles/battlearena.php?boss_id='+jQuery(this).children().eq(0).val()+'","hud_fight");return false;')
+				jQuery(this).attr('id', 'modded');
+				jQuery(this).removeAttr('action')
+			})
+			jQuery('form input[value=boss_help]').parent().each(function(){
+				jQuery(this).attr('onclick', 'MobWars.HUD.navigateTo("/bossbattles/battlearena.php?boss_id='+jQuery(this).children().eq(1).val()+'","hud_fight");return false;')
+				jQuery(this).attr('id', 'modded');
+				jQuery(this).removeAttr('action')
+			})
+			jQuery('#content').prepend('<div class="announcement"><table><tbody><tr><td>Page bypass installed</td></tr></tbody></table></div>');
+		}else if(change == 'profile'){
+			if(jQuery('#modded').length){
+				return;
+			}
+			try{
+				var m; 
+				if(m = document.getElementsByClassName('profilePicture')[0].getAttribute('src')){
+					var i = m.indexOf('/v2.2/');
+					var j = m.indexOf('/picture'); 
+					m = m.substring(i+6,j); 
+				}
+				jQuery('.player_info').children().children().eq(4).append('<br><a id="modded" href="https://www.facebook.com/'+m+'" target="_blank">Facebook Profile</a> - GuessX Mod');
+			}catch(mobile){}
+		}
+		if(jQuery('.job_list_wrap').length){
+			if(jQuery('#modded').length){
+				return;
+			}
+			jQuery('.job_list_wrap').attr('id', 'modded');
+			jQuery('.job_list_wrap div[id^="job_"]').each(function(){
+				if(jQuery(this).attr('jobid')){
+					var jobNum = jQuery(this).attr('jobid');
+					var jobDiv = jQuery("#job_" + jobNum);
+					var jobCost = parseInt(jQuery("#job_req_energy_" + jobNum, jobDiv).text());
+					var jobXP = parseInt(jQuery(".xp", jobDiv).text());
+					jQuery('.doJobDropMenu_id_'+jobNum+':last').append('ratio : (' + (jobXP/jobCost).toFixed(2) + ')').css({color: 'green','font-weight': 'bold'});
+				}
+			})
+		}
+	}
+	
+	function heistAPoster(){heistPoster(limitedNum, limitedName);}
+	
+	function heistPoster(num,name){
+		var params = new Object; 
+		params.name;
+		params.method = 'send'; 
+		params.description = 'The first 4 Mob Members to help me will receive a Loot Item!';
+		params.picture = 'https://s3.amazonaws.com/metamoki-mobwars-content/site/help_wanted_feed_90x90.png';
+		var recruitURL = jQuery('#recruit_'+num+'_wrapper').children().attr('onclick');
+		var jobHelpId = parseInt(/job_help_id=(\d+)&/.exec(recruitURL)[1]);
+		var jobUserId = parseInt(/user_id=(\d+)&/.exec(recruitURL)[1]);
+		params.link = 'https://apps.facebook.com/mobwars/jobs/do.php?action=heist_help&job_help_id='+jobHelpId+'&user_id='+jobUserId+'&mw_ref=feed_heist_help_v2';
+		if(num > 1100){
+			params.name = 'I Needs Your Help With '+name+' in Mob Wars!';
+		}else if(num == 335){
+			params.name = 'I Needs Your Help With Lock Industries Heist in Mob Wars!';
+		}else if(num == 337){
+			params.name = 'I Needs Your Help With Chicago Outfit Heist in Mob Wars!';
+		}else if(num == 338){
+			params.name = 'I Needs Your Help With MI6 Headquarters Heist in Mob Wars!';
+		}else if(num == 339){
+			params.name = 'I Needs Your Help With Mob Casino Heist in Mob Wars!';
+		}else if(num == 340){
+			params.name = 'I Needs Your Help With Red Mafiya Heist in Mob Wars!';
+		}else if(num == 341){
+			params.name = 'I Needs Your Help With Gold Palace Heist in Mob Wars!';
+		}else if(num == 342){
+			params.name = 'I Needs Your Help With Triad Den Heist in Mob Wars!';
+		}else if(num == 343){
+			params.name = 'I Needs Your Help With Yakuza Bathhouse Heist in Mob Wars!';
+		}
+		var group = jQuery('#gx_sbSelect_group').val();
+		if(group == ''|| isNaN(group)){
+			alert('Check Facebook group ID');
+			return;
+		}
+		FB.api(
+			'/'+group+'/feed', 'post', {
+				method: params.method,
+				name: params.name,
+				link: params.link,
+				picture: params.picture,
+				description: params.description
+				}, function(response) {
+				if (response && !response.error_message) {
+					alert('Posting completed.');
+				} else {
+					alert('Error while posting.');
+				}
+			}
+		);	
+	}	
+//The be nearth works but group must be open and public
+/*	
+	'<nobr><label><span id="gx_sbPosts"></span></label></nobr><br />'+
+	
+	var CommentToPostWithID = '';
+	var postlist = document.getElementById("gx_sbSelectablePost");
+	CommentToPostWithID = postlist.options[postlist.selectedIndex].value;
+	var comment = 'I Needs Your Help in Mob Wars! https://apps.facebook.com/mobwars/jobs/do.php?action=heist_help';
+	FB.api('/'+CommentToPostWithID+'/comments','post',{'message':comment}, function(response){
+			if (!response || response.error) {
+			} else {
+			}
+	});
+	
+	FB.api('/'+groupID+'/feed', function(response){
+		if (response && !response.error) {
+			if(JSON.stringify(response, null, 0).length == 11){
+				_console('The group must be Open to comment on posts')
+			}else{
+				var output = '<select id="gx_sbSelectablePost" style="width:60%;">';
+				for (var x=0;x<response.data.length;x++) {
+					var object = response.data[x];
+					var description = object.message?object.message : object.caption;
+					description = description ? description : "";
+					output += '<option value="'+object.id+'" '+(object.id == CommentToPostWithID ? 'selected' : '')+'>'+description.substr(0,50)+'</option>';	
+				}
+				output += '</select>';
+				jQuery('#gx_sbPosts').html(output);
+			}
+		}
+	});
+	
+*/
+	
+	function beginBoss(ID){
+		var bID;
+		if(ID == '1'){
+			bID = 1385949;
+		}else if(ID == '2'){
+			bID = 1615505;
+		}else if(ID == '3'){
+			bID = 1623659;
+		}else if(ID == '4'){
+			bID = 1626519;
+		}else if(ID == '5'){
+			bID = 1628887;
+		}else if(ID == '6'){
+			bID = 1633504;
+		}else if(ID == '7'){
+			bID = 1635310;
+		}else if(ID == '8'){
+			bID = 1636885;
+		}
+		doAjax(docoHttp+'//mobwars-prod-ssl.metamoki.com/bossbattles/do.php', 'boss_id='+ID+'&action=begin_boss',  function(){
+			MobWars.HUD.navigateTo('/bossbattles/battlearena.php?boss_id='+bID, 'hud_fight');
+		});					
+	}	
+	
+	function write_scripts() {
+		var html = '<ul style="padding-left: 0; margin-left: 0; margin-top: 0; margin-bottom: 0; list-style-type: none;">'
+
+		for(var i = 0; i < bookMarklets.length; i++) {
+			html += '<li><a href=\'javascript:(function(){var a%3Ddocument.createElement("script");a.type%3D"text/javascript";a.src%3D"'+bookMarklets[i].URL+'%3F"%2BMath.random();document.getElementsByTagName("head")[0].appendChild(a)})();\' class="_button" style="display: block; padding: 5px; width: 175px; border-bottom: 1px solid #000;" src="'+bookMarklets[i].URL+'">'+bookMarklets[i].BookmarkletName+'</a></li>'
+		}
+
+		html += '</ul>';
+		jQuery('#gx_scriptsMenu').html(html);
+		jQuery('._button').unbind('click').bind('click',function() {
+			load_bookmark(jQuery(this).attr('src'));
+			jQuery('#gx_scriptsButton').trigger('click');
+			return false;
+		});
+		jQuery('._button').hover(
+			function () {
+				jQuery(this).css({'background-color':'#999'});
+			},
+			function () {
+				jQuery(this).css({'background-color':'#333'});
+			}
+		);
+		jQuery('#gx_scriptsButton').toggle(
+			function() {
+				jQuery('#gx_scriptsMenu').css('display','block');
+			},
+			function() {
+				jQuery('#gx_scriptsMenu').css('display','none');
+			}
+		);
+	}
+	
+	function load_bookmark(src) {
+		if (/javascript/.test(src)) {
+			eval(src);
+		}else{
+			var a = document.createElement("script");
+			a.type = "text/javascript";
+			a.src = src;
+			document.getElementsByTagName("head")[0].appendChild(a);
+		}
+	}	
+	
+	write_scripts();
+	
+	function doOrder(){
+		clearTimeout(gx_sb.intOrder);
+		if(!gx_sb.isStarted){
+			return;
+		}else{
+			if(jQuery('#guessx_mmmDiv').length > 0){
+				if(gx_mmm.isStarted){
+					dolog('Magic Mob Maxer is running, waiting for it to finish!');
+					gx_sb.intOrder = setTimeout(function(){
+						doOrder();
+					}, 60000);
+					return;
+				}
+			}
+			dolog('Mob Wars Sidebar Running..');
+			var done = false;
+			if(gx_sb.options.autoBank){
+				if(jQuery("#gx_sbAutorun").is(':checked') && gx_sb.options.firstRun && isFirstLoada){
+					dolog('Off to check your money!');
+					isFirstLoada = false;
+					gotoBank();
+					return;
+				}
+				if(Math.floor((new Date() - gx_sb.lastBank)/60000) > 14){
+					gx_sb.lastBank = new Date();
+					done = true;
+					dolog('Off to check your money!');
+					gotoBank();
+					return;
+				}
+			}
+			if(gx_sb.options.autoProp){
+				if(jQuery("#gx_sbAutorun").is(':checked') && gx_sb.options.firstRun && isFirstLoadb){
+					dolog('Off to check property prices in NY');
+					isFirstLoadb = false;
+					chkProp();
+					return;
+				}
+				if(Math.floor((new Date() - gx_sb.lastProp)/60000) > 14){
+					gx_sb.lastProp = new Date();
+					done = true;
+					dolog('Off to check property prices in NY');
+					chkProp();
+					return;
+				}
+			}
+			if(gx_sb.options.autoRacket){
+				if(jQuery("#gx_sbAutorun").is(':checked') && gx_sb.options.firstRun && isFirstLoadc){
+					dolog('Off to check Rackets!');
+					isFirstLoadc = false;
+					chkRacket();
+					return;
+				}
+				if(Math.floor((new Date() - gx_sb.lastRacket)/60000) > gx_sb.rackCity-1){
+					gx_sb.lastRacket = new Date();
+					done = true;
+					dolog('Off to check Rackets!');
+					chkRacket();
+					return;
+				}
+			}
+			if(gx_sb.options.autoHeist){
+				if(jQuery("#gx_sbAutorun").is(':checked') && gx_sb.options.firstRun && isFirstLoadd){
+					dolog('Off to check Heists!');
+					isFirstLoadd = false;
+					chkRacket();
+					return;
+				}
+				if(Math.floor((new Date() - gx_sb.lastHeist)/60000) > 180){
+					gx_sb.lastHeist = new Date();
+					done = true;
+					dolog('Off to check Heists!');
+					gotoHeists();
+					return;
+				}
+			}
+			if(!done){
+				gx_sb.intOrder = setTimeout(function(){
+					doOrder();
+				}, 60000);
+			}
+		}
+	}
+	
+	function gotoBank(){
+		if(!gx_sb.isStarted){
+			return;
+		}
+		gx_sb.doBanking = true;
+		MobWars.HUD.navigateTo('/bank/');
+	}
+	
+	function gotoHeists(){
+		if(!gx_sb.isStarted){
+			return;
+		}
+		gx_sb.doHeists = true;
+		MobWars.HUD.navigateTo('/heists/','hud_jobs');
+	}	
+	
+	
+	function chkBank(){
+		if(!gx_sb.isStarted){
+			return;
+		}
+		if(!gx_sb.doBanking){
+			return;
+		}
+		gx_sb.doBanking = false;
+		if(parseInt(jQuery('.cur_cash').text().replace(/[^0-9]/g, '')) > 999){
+			jQuery('#mw_aj_1_i').click()
+			//doAjax('https://mobwars-prod-ssl.metamoki.com/bank/do.php', 'deposit_amount='+parseInt(jQuery('.cur_cash').text().replace(/[^0-9]/g, ''))+'&action=deposit');
+		}	
+		setTimeout(function(){
+			doOrder();
+		}, 5000);		
+	}
+
+	
+	function chkProp(){
+		if(!gx_sb.isStarted){
+			return;
+		}
+		MobWars.HUD.navigateTo('/city/?show_loc=new_york','hud_city', function(){
+			var propsToPrice = [   
+				{prop: 1,price:parseInt(jQuery('.1_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 4,price:parseInt(jQuery('.4_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 5,price:parseInt(jQuery('.5_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 2,price:parseInt(jQuery('.2_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 6,price:parseInt(jQuery('.6_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 7,price:parseInt(jQuery('.7_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 3,price:parseInt(jQuery('.3_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 29,price:parseInt(jQuery('.29_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 30,price:parseInt(jQuery('.30_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 33,price:parseInt(jQuery('.33_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 9,price:parseInt(jQuery('.9_price').text().replace(/[^0-9]/g, ''))},	
+				{prop: 31,price:parseInt(jQuery('.31_price').text().replace(/[^0-9]/g, ''))},
+				{prop: 10,price:parseInt(jQuery('.10_price').text().replace(/[^0-9]/g, ''))}	
+			];
+
+			var buyPrice = propsToPrice.slice(0);
+
+			buyPrice.sort(function(a,b) {
+				return b.price - a.price;
+			});
+
+		//	_console(JSON.stringify(buyPrice, null, 0));
+			
+			var cashOnHand = parseInt(jQuery('.cur_cash').text().replace(/[^0-9]/g, ''));
+			var propToBuy;
+			var numBuy;
+			if(cashOnHand > buyPrice[buyPrice.length-1].price){
+				for(var i = 0; i < buyPrice.length; i++){
+					if(cashOnHand >= buyPrice[i].price){
+						if(cashOnHand >= buyPrice[i].price*100){
+							numBuy = 100;
+						}else if(cashOnHand > buyPrice[i].price*50){
+							numBuy = 50;
+						}else if(cashOnHand > buyPrice[i].price*10){
+							numBuy = 10;
+						}else if(cashOnHand > buyPrice[i].price*5){
+							numBuy = 5;
+						}else{
+							numBuy = 1;
+						}
+						propToBuy = buyPrice[i].prop
+					}
+				}
+				MobWars.City.doCityAction(propToBuy,'buy','upgrade',numBuy);
+				setTimeout(function(){
+					chkProp();
+				}, 2500);
+			}else{
+				setTimeout(function(){
+					doOrder();
+				}, 2000);
+			}
+		});
+	}	
+
+	function chkRacket(){
+		if(!gx_sb.isStarted){
+			return;
+		}
+		MobWars.HUD.navigateTo('/rackets/','hud_jobs', function(){
+			gx_sb.propArray = [];
+			try{
+				if(gx_sb.options.autoRacket){
+					if(gx_sb.options.collectNY && jQuery('#progress_container_303').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_303').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_9701143_r&item=303&action=collect';
+							}
+						}else if(jQuery('td[id^="303_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_9701143_r&item=303&action=collect';
+						}
+						if(link){
+							gx_sb.propArray.push(link);
+						}
+					}
+					if(gx_sb.options.collectChi && jQuery('#progress_container_304').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_304').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_9719976_r&item=304&action=collect';
+							}				
+						}else if(jQuery('td[id^="304_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_9719976_r&item=304&action=collect';
+						}	
+						if(link){
+							gx_sb.propArray.push(link);
+						}
+					}
+					if(gx_sb.options.collectLon && jQuery('#progress_container_305').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_305').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_9733819_r&item=305&action=collect';
+							}				
+						}else if(jQuery('td[id^="305_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_9733819_r&item=305&action=collect';
+						}	
+						if(link){
+							gx_sb.propArray.push(link);
+						}
+					}
+					if(gx_sb.options.collectVeg && jQuery('#progress_container_306').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_306').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_97458612_r&item=306&action=collect';
+							}				
+						}else if(jQuery('td[id^="306_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_97458612_r&item=306&action=collect';
+						}	
+						if(link){
+							gx_sb.propArray.push(link);
+						}
+					}
+					if(gx_sb.options.collectMos && jQuery('#progress_container_307').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_307').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_9758791_r&item=307&action=collect';
+							}				
+						}else if(jQuery('td[id^="307_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_9758791_r&item=307&action=collect';
+						}	
+						if(link){
+							gx_sb.propArray.push(link);
+						}
+					}
+					if(gx_sb.options.collectDub && jQuery('#progress_container_308').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_308').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_97633418_r&item=308&action=collect';
+							}		
+						}else if(jQuery('td[id^="308_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_97633418_r&item=308&action=collect';
+						}	
+						if(link){
+							gx_sb.propArray.push(link);
+						}							
+					}
+					if(gx_sb.options.collectSha && jQuery('#progress_container_309').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_309').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_97652421_r&item=309&action=collect';
+							}
+						}else if(jQuery('td[id^="309_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_97652421_r&item=309&action=collect';
+						}
+						if(link){
+							gx_sb.propArray.push(link);
+						}							
+					}		
+					if(gx_sb.options.collectTok && jQuery('#progress_container_310').length>0){
+						var link;
+						if(gx_sb.options.collectFull){
+							if(jQuery('#factory_timer_310').text().indexOf("Full") > 0){
+								link = 'ajax_callback=factory_97721924_r&item=310&action=collect';
+							}
+						}else if(jQuery('td[id^="310_lvl_"]').hasClass('compProg')){
+							link = 'ajax_callback=factory_97721924_r&item=310&action=collect';
+						}
+						if(link){
+							gx_sb.propArray.push(link);
+						}							
+					}						
+				}
+			}catch(notOpen){}
+			if(gx_sb.propArray.length > 0){
+				setTimeout(function(){
+					ajxQueueCheck();
+				}, 2500);
+			}else{
+				setTimeout(function(){
+					doOrder();
+				}, 5000);
+			}
+		});
+	}
+	
+	function ajxQueueCheck(){
+		if(!gx_sb.propArray.length){
+			dolog('All Rackets Checked!');
+			setTimeout(function(){
+				doOrder();
+			}, 5000);
+			return;
+		}
+		doAjax(docoHttp+'//mobwars-prod-ssl.metamoki.com/city/do.php', gx_sb.propArray.shift(), function(){setTimeout(function(){
+			ajxQueueCheck();
+		}, 1000);});
+	}	
+	
+	function chkHeists(){
+		gx_sb.heistArray = [];
+		var heistsInfo = [   
+			{num: 335, name:"Lock Industries Heist"},
+			{num: 337, name:"Chicago Outfit Heist"},
+			{num: 338, name:"MI6 Headquarters Heist"},
+			{num: 339, name:"Mob Casino Heist"},
+			{num: 340, name:"Red Mafiya Heist"},
+			{num: 341, name:"Gold Palace Heist"},
+			{num: 342, name:"Triad Den Heist"},
+			{num: 343, name:"Yakuza Bathhouse Heist"}
+		];
+		for(var i = 0; i < jQuery('#hud_city .subDropMenu').children().length; i++){
+			if(i > 7){
+				break;
+			}
+			gx_sb.heistArray.push(heistsInfo[i]);
+		}
+		workHeists();
+	}
+		
+	function workHeists(){
+		if(!gx_sb.heistArray.length){
+			dolog('Heists all checked!')			
+			setTimeout(function(){
+				doOrder();
+			}, 5000);
+			return;
+		}else{
+			if(/Finish Job/.test(jQuery('#action_btn_div_'+gx_sb.heistArray[0].num).children().val())){
+				dolog('Finished '+gx_sb.heistArray[0].name+'! Collecting..')
+				jQuery('#action_btn_div_'+gx_sb.heistArray[0].num).children().click();
+			}else if(!jQuery('#recruit_'+gx_sb.heistArray[0].num+'_wrapper').hasClass('hideDisplayBox')){
+				if(/Recruit Now/.test(jQuery('#recruit_'+gx_sb.heistArray[0].num+'_wrapper').children().val())){
+					dolog(gx_sb.heistArray[0].name+' is not ready yet!')
+				}
+			}else if(/Start Job/.test(jQuery('#action_btn_div_'+gx_sb.heistArray[0].num).children().val())){ 
+				dolog('Starting '+gx_sb.heistArray[0].name+'!')
+				jQuery('#action_btn_div_'+gx_sb.heistArray[0].num).children().click();
+			}else if(/Try Again/.test(jQuery('#action_btn_div_'+gx_sb.heistArray[0].num).children().val())){ 
+				dolog('Failed '+gx_sb.heistArray[0].name+'! Restarting Heist!')
+				jQuery('#action_btn_div_'+gx_sb.heistArray[0].num).children().click();
+			}
+			setTimeout(function(){
+				dolog('Checking next heist in 5 seconds...');
+			}, 2000);
+			gx_sb.heistArray.shift();
+			setTimeout(function(){
+				workHeists();
+			}, 5000);
+		}
+	}
+	
+	function writeSettings(){
+		localStorage.setItem("gx_sb", JSON.stringify(gx_sb.options));
+	}
+ 
+	function readSettings(){
+		if (!localStorage.getItem("gx_sb")) { //no settings
+			writeSettings();
+		} else {
+			var tempsettings = JSON.parse(localStorage.getItem("gx_sb"));
+			if(Object.keys(tempsettings).length != Object.keys(gx_sb.options).length) { 
+				writeSettings();
+			}else{
+				gx_sb.options = tempsettings;
+			}
+		}
+	}
+	
+	function dolog(msg){
+		jQuery('#gx_sbStatus').html(msg);
+	}	
+	
+	function _console(msg){
+		setTimeout(function(){
+			throw new Error(msg);
+		}, 0);
+	}
+	
+	/*add analytics*/
+	function loadContent(file) {
+		var head=document.getElementsByTagName('head').item(0);
+		var scriptTag=document.getElementById('loadScript');
+		if(scriptTag)head.removeChild(scriptTag);
+		script=document.createElement('script');
+		script.src=file;
+		script.type='text/javascript';
+		script.id='loadScript';
+		head.appendChild(script);
+		setTimeout(load,1000);
+	}
+	loadContent('https://www.google-analytics.com/ga.js');
+	function load() {
+		try {
+			var pageTracker=_gat._getTracker("UA-35022618-1");
+			pageTracker._trackPageview("/gx_sb v"+gx_sb.version);
+		} catch(err){}
+	}
+	/*end analytics*/
